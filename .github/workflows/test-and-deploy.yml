@@ -1,0 +1,51 @@
+# .github/workflows/test-and-deploy.yml
+name: Test and Deploy
+
+# Когда запускать?
+on:
+  push:
+    branches: [ main ]  # При пуше в main
+  pull_request:
+    branches: [ main ]   # При создании PR
+
+# Что делать?
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Используем Ubuntu
+    
+    steps:
+      - name: 📥 Скачать код
+        uses: actions/checkout@v2
+      
+      - name: 🐍 Установить Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      
+      - name: 📦 Установить зависимости
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: 🧪 Запустить тесты
+        run: python -m unittest discover -v
+      
+      - name: ✅ Проверить стиль кода
+        run: |
+          pip install flake8
+          flake8 app.py --max-line-length=100
+  
+  deploy:
+    needs: test  # Запускать только после успешных тестов
+    runs-on: ubuntu-latest
+    # Этот шаг выполнится ТОЛЬКО если тесты прошли
+    
+    steps:
+      - name: 📥 Скачать код
+        uses: actions/checkout@v2
+      
+      - name: 🚀 Симуляция деплоя
+        run: |
+          echo "🎉 Тесты прошли! Деплоим приложение..."
+          echo "На самом деле мы ничего не деплоим,"
+          echo "но в реальном проекте тут был бы deploy"
