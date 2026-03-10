@@ -1,0 +1,4 @@
+# requirements.txt
+# Пока пустой, но позже пригодятся:
+# pytest
+# flake8
